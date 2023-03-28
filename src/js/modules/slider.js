@@ -15,6 +15,8 @@ export default class Slider {
             this.slideIndex = this.slides.length;
         }
 
+        this.hanson = document.querySelector('.hanson');
+
         this.slides.forEach(slide => {
             slide.style.display = 'none';
         });
@@ -24,6 +26,15 @@ export default class Slider {
 
     plusSlides(n) {
         this.showSlides(this.slideIndex += n);
+        if (this.slideIndex === 3) {
+            this.hanson.style.opacity = 0;
+            setTimeout(() => {
+                this.hanson.style.opacity = 1;
+                this.hanson.classList.add("animated", "fadeInUp");
+            }, 3000);
+        } else {
+            this.hanson.classList.remove("animated", "fadeInUp");
+        }
     }
 
     render() {
