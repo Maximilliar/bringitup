@@ -15,7 +15,7 @@ export default class MainSlider extends Slider {
         }
 
         this.hanson = document.querySelector('.hanson');
-
+        
         this.slides.forEach(slide => {
             slide.style.display = 'none';
         });
@@ -24,31 +24,54 @@ export default class MainSlider extends Slider {
     }
 
     plusSlides(n) {
-        this.showSlides(this.slideIndex += n);
-        if (this.slideIndex === 3) {
-            this.hanson.style.opacity = 0;
-            setTimeout(() => {
-                this.hanson.style.opacity = 1;
-                this.hanson.classList.add("animated", "fadeInUp");
-            }, 3000);
-        } else {
-            this.hanson.classList.remove("animated", "fadeInUp");
-        }
+        try {
+            this.showSlides(this.slideIndex += n);
+            if (this.slideIndex === 3) {
+                this.hanson.style.opacity = 0;
+                setTimeout(() => {
+                    this.hanson.style.opacity = 1;
+                    this.hanson.classList.add("animated", "fadeInUp");
+                }, 3000);
+            } else {
+                this.hanson.classList.remove("animated", "fadeInUp");
+            }
+        } catch(e) {}
     }
 
-    render() {
-        this.btns.forEach(item => {
-            item.addEventListener('click', () => {
-                this.plusSlides(1);
-            });
-
-            item.parentNode.previousElementSibling.addEventListener('click', (e) => {
+    bindTriggers() {
+        document.querySelectorAll('.prevmodule').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
                 e.preventDefault();
-                this.slideIndex = 1;
-                this.showSlides(this.slideIndex);
+                this.plusSlides(-1);
             });
         });
 
-        this.showSlides(this.slideIndex);
+        document.querySelectorAll('.nextmodule').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.plusSlides(1);
+            });
+        });
+    }
+
+    render() {
+        if (this.container) {
+            this.btns.forEach(item => {
+                item.addEventListener('click', () => {
+                    this.plusSlides(1);
+                });
+    
+                item.parentNode.previousElementSibling.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.slideIndex = 1;
+                    this.showSlides(this.slideIndex);
+                });
+            });
+    
+            this.showSlides(this.slideIndex);
+            this.bindTriggers();
+        }
     }
 }
